@@ -7,7 +7,7 @@ import { z } from "zod";
 
 const app = express();
 // Define base URL for API endpoints (can be overridden by environment)
-const BASE_URL = process.env.BASE_URL || "https://internship-backend-tm0j.onrender.com";
+const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
 const PORT = process.env.PORT || 3000;
 const prisma = new PrismaClient();
 

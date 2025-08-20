@@ -6,6 +6,8 @@ import * as cheerio from "cheerio";
 import { z } from "zod";
 
 const app = express();
+// Define base URL for API endpoints (can be overridden by environment)
+const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
 const PORT = process.env.PORT || 3000;
 const prisma = new PrismaClient();
 
@@ -123,5 +125,5 @@ app.use((req, res) => {
 
 // Start the server
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running on ${BASE_URL}`);
 });

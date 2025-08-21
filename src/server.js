@@ -87,7 +87,7 @@ app.get("/websites", async (req, res) => {
     const websites = await prisma.website.findMany({ orderBy: { createdAt: "desc" } });
     res.json(websites);
   } catch (err) {
-    res.status(500).json({ error: "Failed to fetch websites." ,details:error.message});
+    res.status(500).json({ error: "Failed to fetch websites." ,details:err.message});
   }
 });
 

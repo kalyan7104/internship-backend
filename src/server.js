@@ -51,26 +51,35 @@ function enhanceDescription(description) {
   return desc;
 }
 
-// POST /analyze-website: Analyze website and store in DB
+// POST /analyze-website: Analyze website and store in DB (handles duplicates)
 app.post("/analyze-website", async (req, res) => {
   const parse = urlSchema.safeParse(req.body);
   if (!parse.success) {
     return res.status(400).json({ error: "Invalid URL format." });
   }
   const { url } = parse.data;
+
   try {
+    // Check if website already exists
+    const existing = await prisma.website.findUnique({ where: { url } });
+    if (existing) {
+      return res.status(400).json({ error: "Website already exists." });
+    }
+
     const { brandName, description } = await scrapeWebsite(url);
     const enhancedDescription = enhanceDescription(description);
+
     const website = await prisma.website.create({
       data: { url, brandName, description, enhancedDescription }
     });
+
     res.json(website);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// GET /website-crud: Retrieve all website records
+// GET /website-crud: Retrieve all websites
 app.get("/website-crud", async (req, res) => {
   try {
     const websites = await prisma.website.findMany({
@@ -82,7 +91,7 @@ app.get("/website-crud", async (req, res) => {
   }
 });
 
-// GET /website-crud/:id: Retrieve a single website by ID
+// GET /website-crud/:id: Retrieve a single website
 app.get("/website-crud/:id", async (req, res) => {
   const id = Number(req.params.id);
   if (isNaN(id)) return res.status(400).json({ error: "Invalid ID." });
@@ -95,7 +104,7 @@ app.get("/website-crud/:id", async (req, res) => {
   }
 });
 
-// PUT /website-crud/:id: Update a website record
+// PUT /website-crud/:id: Update website
 app.put("/website-crud/:id", async (req, res) => {
   const id = Number(req.params.id);
   if (isNaN(id)) return res.status(400).json({ error: "Invalid ID." });
@@ -110,7 +119,7 @@ app.put("/website-crud/:id", async (req, res) => {
   }
 });
 
-// DELETE /website-crud/:id: Delete a website record
+// DELETE /website-crud/:id: Delete website
 app.delete("/website-crud/:id", async (req, res) => {
   const id = Number(req.params.id);
   if (isNaN(id)) return res.status(400).json({ error: "Invalid ID." });

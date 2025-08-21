@@ -69,10 +69,11 @@ This repository contains a Node.js backend application for analyzing websites an
 1. Start the server
 
 2. Test endpoints using Postman:
-- **POST /analyze**: `{"url": "https://rgukt.in/"}`
-- **GET /websites**: Retrieve all records.
-- **PUT /websites/:id**: Update a record (e.g., `{"description": "Updated desc"}`).
-- **DELETE /websites/:id**: Delete a record.
+- **DELETE /website-crud/{id}
+- **PUT /website-crud/{id}
+- **GET /website-crud/{id}
+- **GET /website-crud
+- **POST /analyze-website
 
 
 
